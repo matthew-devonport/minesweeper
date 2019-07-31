@@ -1,32 +1,79 @@
 document.addEventListener('DOMContentLoaded', startGame)
 
-// Define your `board` object here!
-// var board = 
+var board = {
+}
+
+function createBoard(size) {
+  board.cells= []
+  let a = size
+
+  for (let row = 0; row < a; row++) {
+    for (let column = 0; column < a; column++){
+      var newCell = {};
+      newCell.hidden = true;
+      newCell.isMine = Math.random() < 0.25;
+      newCell.isMarked = false;
+      newCell.row = row;
+      newCell.col = column;
+      board.cells.push(newCell);
+    }
+  }
+}
 
 function startGame () {
-  // Don't remove this function call: it makes the game work!
+ createBoard(4)
+document.addEventListener("click", checkForWin);
+document.addEventListener("contextmenu", checkForWin);
+for (let i = 0; i < board.cells.length; i++) { 
+  board.cells[i].surroundingMines = countSurroundingMines(board.cells[i]);
+}
   lib.initBoard()
 }
+function noMines () {
+  for (let i = 0; i < board.cells.length; i++) {
+    var hasUnmarkedMines = board.cells[i].isMine && !board.cells[i].isMarked;
+    var hasUnrevealedNonMines = !board.cells[i].isMine && board.cells[i].hidden;
 
-// Define this function to look for a win condition:
-//
-// 1. Are all of the cells that are NOT mines visible?
-// 2. Are all of the mines marked?
+    if (hasUnmarkedMines || hasUnrevealedNonMines){
+      return false;
+    }
+  }
+  return true;
+}
+
 function checkForWin () {
-
-  // You can use this function call to declare a winner (once you've
-  // detected that they've won, that is!)
-  //   lib.displayMessage('You win!')
+  if (noMines()) {
+    lib.displayMessage('You win!')  
+  }
 }
 
-// Define this function to count the number of mines around the cell
-// (there could be as many as 8). You don't have to get the surrounding
-// cells yourself! Just use `lib.getSurroundingCells`: 
-//
-//   var surrounding = lib.getSurroundingCells(cell.row, cell.col)
-//
-// It will return cell objects in an array. You should loop through 
-// them, counting the number of times `cell.isMine` is true.
+
+window.onload=function(){
+  var boardResetButton = document.getElementById("reset")
+  boardResetButton.addEventListener("click", resetBoard)
+}
+
+function resetBoard () {
+  document.querySelector(".board").innerHTML= ''
+  var board = {}
+  startGame()
+  };
+
+
+    
 function countSurroundingMines (cell) {
+  var surrounding = lib.getSurroundingCells(cell['row'], cell['col']);
+  var mined = 0;
+  for(var i=0; i<surrounding.length; i++){
+    if(surrounding[i].isMine){
+      mined++
+    }
+  }
+      
+  return mined;
 }
 
+function playSound(sound) {
+  var audio = document.getElementById(sound);
+  audio.play();
+}

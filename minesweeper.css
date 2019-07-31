@@ -1,9 +1,6 @@
-html, body {
-  height: 100%;
-  font-family: 'Open Sans', sans-serif
-}
 
-body {
+
+.minebody {
   display: flex;
   align-items: center;
   justify-content: flex-center;
@@ -57,4 +54,11 @@ div.hidden:hover {
 
 div.marked, div.marked:hover {
   background: no-repeat center/60% url("images/mark.svg") deepskyblue;
+}
+
+button {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
 }
